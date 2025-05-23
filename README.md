@@ -26,7 +26,7 @@ European leagues, including:
 ```
 ├── README.md               # Project documentation
 ├── requirements.txt        # Python dependencies
-├── sample.ipynb           # Main analysis notebook
+├── football_position_prediction.ipynb           # Main analysis notebook
 ├── artifacts/             # Model outputs and visualizations
 │   ├── classification_report.txt
 │   ├── confusion_matrix.png
@@ -52,12 +52,12 @@ European leagues, including:
 
 ## Usage
 
-The main analysis is contained in `sample.ipynb`. To run the analysis:
+The main analysis is contained in `football_position_prediction.ipynb`. To run the analysis:
 
 1. Ensure you have Jupyter installed
 2. Open the notebook:
    ```bash
-   jupyter notebook predicting_football_player_positions.ipynb
+   jupyter notebook football_position_prediction.ipynb
    ```
 3. Run all cells to:
     - Load and preprocess the data
