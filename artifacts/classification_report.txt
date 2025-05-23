@@ -1,0 +1,12 @@
+Classification Report for XGBClassifier
+
+              precision    recall  f1-score   support
+
+          DF       0.75      0.78      0.76       201
+          FW       0.72      0.77      0.74       150
+          GK       0.93      0.95      0.94        41
+          MF       0.62      0.56      0.59       179
+
+    accuracy                           0.72       571
+   macro avg       0.75      0.76      0.76       571
+weighted avg       0.71      0.72      0.72       571
