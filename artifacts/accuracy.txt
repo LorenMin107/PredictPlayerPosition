@@ -1,0 +1,2 @@
+Model: XGBClassifier
+Accuracy on test set: 0.7180

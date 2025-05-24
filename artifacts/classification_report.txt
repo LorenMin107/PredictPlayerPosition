@@ -1,5 +1,7 @@
 Classification Report for XGBClassifier
 
+Accuracy on test set: 0.7180
+
               precision    recall  f1-score   support
 
           DF       0.75      0.78      0.76       201
