@@ -1,41 +1,49 @@
-# Predicting Football Player Positions Using Performance Statistics from Top 5 European Leagues
+# Football Player Position Prediction
 
-This project uses machine learning to predict football player positions based on performance statistics from the top 5
-European leagues. It demonstrates how to use player statistics like expected goals (xG), assists, progressive passes,
-and defensive actions to classify players into their primary positions.
+This project uses machine learning to predict football player positions based on performance statistics from the top 5 European leagues. It demonstrates how to use player statistics like goals, assists, expected goals (xG), progressive passes, and defensive actions to classify players into their primary positions: Defender (DF), Forward (FW), Goalkeeper (GK), and Midfielder (MF).
 
-## Overview
+![Confusion Matrix](artifacts/confusion_matrix.png)
 
-The project analyzes a comprehensive dataset of player statistics from top European leagues to:
+## Features
 
-- Predict player positions using various performance metrics
-- Identify key statistics that influence position classification
-- Provide insights into the relationship between player statistics and their roles
-
-## Dataset
-
-The dataset used is curated by Orkun Aktas and contains season-level statistics for thousands of players from the top 5
-European leagues, including:
-
-- Player demographics (age, nationality)
-- Performance metrics (goals, assists, passes)
-- Advanced statistics (xG, progressive passes, defensive actions)
+- **Data Preprocessing Pipeline**: Clean and prepare football statistics data for machine learning
+- **Exploratory Data Analysis**: Visualize relationships between player statistics and positions
+- **Model Training & Evaluation**: Train and compare multiple classification algorithms
+- **Feature Importance Analysis**: Identify key statistics that determine player positions
+- **Misclassification Analysis**: Understand why certain positions are harder to predict
+- **Visualization Suite**: Generate insightful visualizations of model performance
+- **Prediction Interface**: Use the trained model to predict positions for new players
 
 ## Project Structure
 
 ```
-├── README.md               # Project documentation
-├── requirements.txt        # Python dependencies
-├── football_position_prediction.ipynb           # Main analysis notebook
-├── artifacts/             # Model outputs and visualizations
-│   ├── classification_report.txt
-│   ├── confusion_matrix.png
-│   ├── feature_importance.png
-│   └── position_classifier.joblib
-├── data/                  # Dataset directory
-│   └── top5-players.csv   
-└── models/               # Model storage directory
+├── README.md                           # Project documentation
+├── requirements.txt                    # Python dependencies
+├── football_position_prediction.ipynb  # Main analysis notebook
+├── model_pipeline.py                   # Modular ML pipeline functions
+├── main.py                             # Example script for using the model
+├── artifacts/                          # Model outputs and visualizations
+│   ├── accuracy.txt                    # Model accuracy metrics
+│   ├── classification_report.txt       # Detailed classification metrics
+│   ├── classification_report_heatmap.png # Visual classification report
+│   ├── confusion_matrix.png            # Prediction vs actual visualization
+│   ├── feature_importance.png          # Important features chart
+│   ├── model_summary.txt               # Performance summary
+│   ├── position_classifier.joblib      # Saved model file
+│   └── roc_curves.png                  # ROC curves for model evaluation
+└── data/                               # Dataset directory
+    └── top5-players.csv                # Player statistics dataset
 ```
+
+## Dataset
+
+The dataset contains season-level statistics for players from the top 5 European leagues (Premier League, La Liga, Serie A, Bundesliga, and Ligue 1), including:
+
+- **Player Information**: Age, team, league, nationality
+- **Basic Statistics**: Goals, assists, minutes played, cards
+- **Advanced Metrics**: Expected goals (xG), expected assists (xAG)
+- **Progression Metrics**: Progressive passes, progressive carries
+- **Per-90 Statistics**: Goals per 90 minutes, assists per 90 minutes, etc.
 
 ## Setup and Installation
 
@@ -52,6 +60,8 @@ European leagues, including:
 
 ## Usage
 
+### Jupyter Notebook
+
 The main analysis is contained in `football_position_prediction.ipynb`. To run the analysis:
 
 1. Ensure you have Jupyter installed
@@ -60,10 +70,55 @@ The main analysis is contained in `football_position_prediction.ipynb`. To run t
    jupyter notebook football_position_prediction.ipynb
    ```
 3. Run all cells to:
-    - Load and preprocess the data
-    - Perform exploratory data analysis
-    - Train and evaluate models
-    - Generate visualizations
+   - Load and preprocess the data
+   - Perform exploratory data analysis
+   - Train and evaluate models
+   - Generate visualizations
+
+### Using the Model Pipeline
+
+The `model_pipeline.py` module provides reusable functions for the entire machine learning pipeline:
+
+```python
+from model_pipeline import run_full_pipeline
+
+# Run the entire pipeline with a single function call
+results = run_full_pipeline('data/top5-players.csv')
+```
+
+### Making Predictions with main.py
+
+The `main.py` script demonstrates how to use the trained model for predictions:
+
+```bash
+# Run the example prediction script
+python main.py
+```
+
+To use the model for your own player data:
+
+```python
+import pandas as pd
+from main import load_model, predict_position, display_results
+
+# Load the model
+model = load_model('artifacts/position_classifier.joblib')
+
+# Create player data (example with custom player stats)
+player_stats = {
+    'Age': [25],
+    'Gls': [5],
+    'Ast': [10],
+    # Add all required features...
+}
+player_data = pd.DataFrame(player_stats)
+
+# Make prediction
+predicted_position = predict_position(model, player_data)
+
+# Display results
+display_results(predicted_position, "Unknown")
+```
 
 ## Model Performance
 
@@ -71,40 +126,61 @@ The project compares several classification models:
 
 - Logistic Regression
 - Random Forest
-- XGBoost
+- XGBoost (typically the best performer)
 - K-Nearest Neighbors
 
-Model evaluation results and feature importance analysis can be found in the `artifacts` directory:
+### Evaluation Metrics
 
-- `classification_report.txt`: Detailed model performance metrics
-- `confusion_matrix.png`: Visualization of prediction accuracy
-- `feature_importance.png`: Most influential features for position prediction
+- **Accuracy**: ~72% overall accuracy on the test set
+- **F1-Scores**: Varies by position (GK: 0.94, DF: 0.76, FW: 0.74, MF: 0.59)
+- **Confusion Matrix**: Visual representation of prediction accuracy
+- **ROC-AUC Curves**: Performance across different classification thresholds
 
-## Using the Trained Model
+### Key Insights
 
-The best-performing model is saved as `position_classifier.joblib` in the artifacts directory. You can load and use it
-for predictions:
+- **Goalkeeper (GK)** is the easiest position to predict due to unique statistics
+- **Midfielder (MF)** is the most challenging position to predict due to:
+  - Tactical versatility (defensive to attacking roles)
+  - Statistical overlap with both defenders and forwards
+  - Position fluidity in modern football
 
-```python
-import joblib
+### Feature Importance
 
-# Load the model
-model = joblib.load('artifacts/position_classifier.joblib')
+The most important features for position prediction include:
 
-# Make predictions (ensure your input data matches the training features)
-predictions = model.predict(X_new)
-```
+- Goal-related metrics (Gls, G+A, G-PK) for distinguishing forwards
+- Assist metrics (Ast, xAG) for identifying midfielders
+- Defensive metrics for identifying defenders
+- Specialized goalkeeper statistics
 
-## Requirements
+## Visualizations
 
-Main dependencies include:
+The project generates several visualizations to help understand the data and model performance:
 
-- Python 3.x
-- scikit-learn
-- pandas
-- numpy
-- xgboost
-- matplotlib
-- seaborn
+- **Position Distribution**: Count of players in each position
+- **Feature Distributions by Position**: Boxplots showing statistical patterns
+- **Correlation Heatmap**: Relationships between numerical features
+- **Confusion Matrix**: Model prediction accuracy by position
+- **Classification Report Heatmap**: Precision, recall, and F1-score visualization
+- **ROC-AUC Curves**: Model performance across different thresholds
+- **Feature Importance**: Most influential features for prediction
+- **Misclassification Analysis**: Patterns in prediction errors
 
-See `requirements.txt` for complete list of dependencies.
+## Contributing
+
+Contributions to improve the project are welcome! Some potential areas for enhancement:
+
+1. Adding more sophisticated feature engineering
+2. Implementing hyperparameter tuning
+3. Exploring additional models or ensemble methods
+4. Improving handling of multi-position players
+5. Adding more visualizations or analyses
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Dataset curated by Orkun Aktas
+- Inspired by the growing use of data analytics in football
