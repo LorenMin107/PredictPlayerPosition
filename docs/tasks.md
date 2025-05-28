@@ -88,7 +88,7 @@ This document contains a detailed list of actionable improvement tasks for the F
 
 ## 6. Application and Deployment
 
-[ ] 6.1. Enhance the main.py script:
+[ ] 6.1. Enhance the model_testing.py script:
    - [ ] 6.1.1. Add proper command-line interface
    - [ ] 6.1.2. Implement batch prediction capability
    - [ ] 6.1.3. Add input validation and error handling

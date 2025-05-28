@@ -20,8 +20,7 @@ This project uses machine learning to predict football player positions based on
 ├── README.md                           # Project documentation
 ├── requirements.txt                    # Python dependencies
 ├── football_position_prediction.ipynb  # Main analysis notebook
-├── model_pipeline.py                   # Modular ML pipeline functions
-├── main.py                             # Example script for using the model
+├── model_testing.py                   # Example script for using the model
 ├── artifacts/                          # Model outputs and visualizations
 │   ├── accuracy.txt                    # Model accuracy metrics
 │   ├── classification_report.txt       # Detailed classification metrics
@@ -77,29 +76,27 @@ The main analysis is contained in `football_position_prediction.ipynb`. To run t
 
 ### Using the Model Pipeline
 
-The `model_pipeline.py` module provides reusable functions for the entire machine learning pipeline:
+The `football_position_prediction.ipynb` notebook contains all the functions for the entire machine learning pipeline. You can run the full pipeline by executing the last cell in the notebook:
 
 ```python
-from model_pipeline import run_full_pipeline
-
 # Run the entire pipeline with a single function call
 results = run_full_pipeline('data/top5-players.csv')
 ```
 
-### Making Predictions with main.py
+### Making Predictions with model_testing.py
 
-The `main.py` script demonstrates how to use the trained model for predictions:
+The `model_testing.py` script demonstrates how to use the trained model for predictions:
 
 ```bash
 # Run the example prediction script
-python main.py
+python model_testing.py
 ```
 
 To use the model for your own player data:
 
 ```python
 import pandas as pd
-from main import load_model, predict_position, display_results
+from model_testing import load_model, predict_position, display_results
 
 # Load the model
 model = load_model('artifacts/position_classifier.joblib')
